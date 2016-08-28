@@ -16,7 +16,8 @@
  *
  *
  */
- 
+
+#include "vpk_install/vpk_install.h"
 
 #include "vhbb.h"
 #include "macros.h"
@@ -330,6 +331,13 @@ int main()
 									}
 								else
 									{
+
+									InstallArguments args;
+									args.file = fileVpkLocal;
+									SceUID thid = sceKernelCreateThread("install_thread", (SceKernelThreadEntry)install_thread, 0x40, 0x10000, 0, 0, NULL);
+									if (thid >= 0)
+										sceKernelStartThread(thid, sizeof(InstallArguments), &args);
+									
 									// UPDATE ACTION BUTTON
 									if ( access( string_join( 3, VHBB_APP_ADDRESS_STORAGE_FILES, previewName, ".vpk" ), F_OK ) == -1 ) { preview_isDownloaded = 0; }
 									else 																							   { preview_isDownloaded = 1; }
